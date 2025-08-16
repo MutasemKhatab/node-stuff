@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
+import { ApiError } from "../../common/api-error.ts";
 import { create, findByEmail } from "../../db/user.repository.ts";
-import { gererateToken } from "../../utils/token.ts";
+import { generateToken } from "../../utils/token.ts";
 import {
   LoginRequest,
   LoginResponse,
@@ -13,10 +14,10 @@ export const login = async ({
   password,
 }: LoginRequest): Promise<LoginResponse> => {
   const user = await findByEmail(email);
-  if (!user) throw Error("Invalid credentials");
+  if (!user) throw new ApiError("Invalid credentials", 401);
   const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) throw Error("Invalid credentials");
-  const token = gererateToken(user.email);
+  if (!isPasswordValid) throw new ApiError("Invalid credentials", 401);
+  const token = generateToken(user.email);
   return { token };
 };
 

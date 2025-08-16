@@ -4,7 +4,7 @@ import { env } from "../config/env";
 const SECRET = env.JWT_SECRET;
 const EXPIRATION_TIME = "1h";
 
-export const gererateToken = (email: string): string => {
+export const generateToken = (email: string): string => {
   const token = jwt.sign({ email }, SECRET, {
     expiresIn: EXPIRATION_TIME,
   });

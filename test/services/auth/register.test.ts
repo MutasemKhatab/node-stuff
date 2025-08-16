@@ -12,7 +12,7 @@ afterEach(async () => {
 test("testing simple register should return true", async () => {
   const res = await sendRegisterRequest();
 
-  expect(res.status).toBe(200);
+  expect(res.status).toBe(201);
 });
 
 test("testing 2 register op should fail", async () => {
@@ -23,11 +23,13 @@ test("testing 2 register op should fail", async () => {
   const result1 = await res1.json();
   const result2 = await res2.json();
 
-  expect(res1.status).toBe(200);
-  expect(res2.status).toBe(200);
-  expect(result1.id).not.toBe(0);
-  expect(result1.id).not.toBeNull();
-  expect(result2.id).toBe(0);
+  expect(res1.status).toBe(201);
+  expect(result1.success).toBe(true);
+  expect(result1.data.id).not.toBe(0);
+
+  expect(res2.status).toBe(409);
+  expect(result2.success).toBe(false);
+  expect(result2.data).toBeNull();
 });
 
 async function sendRegisterRequest() {
@@ -40,5 +42,3 @@ async function sendRegisterRequest() {
     }),
   });
 }
-
-

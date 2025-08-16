@@ -30,7 +30,7 @@ test("testing simple login should return token", async () => {
   });
   expect(res.status).toBe(200);
   const result = await res.json();
-  expect(result.token).toBeDefined();
+  expect(result.data.token).toBeDefined();
 });
 
 test("testing login with wrong password should fail", async () => {
@@ -42,5 +42,5 @@ test("testing login with wrong password should fail", async () => {
       password: "wrongpassword",
     }),
   });
-  expect(res.status).toBe(500);
+  expect(res.status).toBe(401);
 });
