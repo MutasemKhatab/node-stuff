@@ -26,3 +26,8 @@ export interface LoginResponse {
 export interface RegisterResponse {
   id: number;
 }
+
+export interface ChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+}

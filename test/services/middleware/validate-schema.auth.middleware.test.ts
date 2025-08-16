@@ -5,16 +5,16 @@ import {
   loginSchema,
   registerSchema,
 } from "../../../src/services/auth/auth.validators.ts";
-import { validate } from "../../../src/services/middleware/auth.middleware.ts";
+import { validateSchema } from "../../../src/services/middleware/auth.middleware.ts";
 
 describe("Auth Middleware", () => {
   const app = express();
   app.use(express.json());
 
-  app.post("/login", validate(loginSchema), (req, res) => {
+  app.post("/login", validateSchema(loginSchema), (req, res) => {
     res.status(200).send("Login successful");
   });
-  app.post("/register", validate(registerSchema), (req, res) => {
+  app.post("/register", validateSchema(registerSchema), (req, res) => {
     res.status(200).send("Registration successful");
   });
 

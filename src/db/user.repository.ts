@@ -47,3 +47,18 @@ export async function findByEmail(email: string): Promise<UserModel | null> {
     throw new ApiError("Database error while finding user by email", 500, err);
   }
 }
+
+export async function updatePassword(
+  email: string,
+  newPassword: string
+): Promise<void> {
+  try {
+    const db = await dbconn();
+    await db.run(`UPDATE users SET password = ? WHERE email = ?;`, [
+      newPassword,
+      email,
+    ]);
+  } catch (err) {
+    throw new ApiError("Database error while updating password", 500, err);
+  }
+}

@@ -4,7 +4,7 @@ import router from "./src/services/auth/auth.router";
 
 const port = env.PORT;
 
-const app = express();
+export const app = express();
 
 app.use(json());
 app.use("/auth", router);

@@ -1,8 +1,13 @@
 import bcrypt from "bcrypt";
 import { ApiError } from "../../common/api-error.ts";
-import { create, findByEmail } from "../../db/user.repository.ts";
+import {
+  create,
+  findByEmail,
+  updatePassword,
+} from "../../db/user.repository.ts";
 import { generateToken } from "../../utils/token.ts";
 import {
+  ChangePasswordRequest,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
@@ -41,4 +46,24 @@ export const register = async (
   registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
   const result = await create(registerRequest);
   return result;
+};
+
+export const changePassword = async (
+  changePasswordRequest: ChangePasswordRequest,
+  email: string
+): Promise<void> => {
+  const user = await findByEmail(email);
+  if (!user) throw new ApiError("User not found", 404);
+
+  const isOldPasswordValid = await bcrypt.compare(
+    changePasswordRequest.oldPassword,
+    user.password
+  );
+  if (!isOldPasswordValid) throw new ApiError("Old password is incorrect", 401);
+
+  const hasedNewPassword = await bcrypt.hash(
+    changePasswordRequest.newPassword,
+    10
+  );
+  updatePassword(email, hasedNewPassword);
 };

@@ -1,13 +1,18 @@
 import { Request, Response } from "express";
 import { ApiError } from "../../common/api-error.ts";
 import { responseHandler } from "../../common/response-handler.ts";
+import { getEmailFromRequest } from "../../utils/token.ts";
 import * as authService from "./auth.service.ts";
-import { LoginRequest, RegisterRequest } from "./auth.types.ts";
+import {
+  ChangePasswordRequest,
+  LoginRequest,
+  RegisterRequest,
+} from "./auth.types.ts";
 
 export const login = responseHandler(async (req: Request, res: Response) => {
   const loginRequest = req.body as LoginRequest;
   const token = await authService.login(loginRequest);
-  return token; // Return data instead of manually sending response
+  return token;
 }, "Login successful");
 
 export const register = responseHandler(async (req: Request, res: Response) => {
@@ -19,6 +24,23 @@ export const register = responseHandler(async (req: Request, res: Response) => {
       409
     );
   }
-  res.status(201); // Set 201 status for successful creation
-  return result; // Return data instead of manually sending response
+  res.status(201);
+  return result;
 }, "User registered successfully");
+
+export const changePassword = responseHandler(
+  async (req: Request, res: Response) => {
+    const email = getEmailFromRequest(req);
+    const changePasswordRequest = req.body as ChangePasswordRequest;
+    if (
+      !changePasswordRequest.oldPassword ||
+      !changePasswordRequest.newPassword
+    ) {
+      throw new ApiError("Old password and new password are required", 400);
+    }
+    await authService.changePassword(changePasswordRequest, email);
+    res.status(204);
+    return;
+  },
+  "Password changed successfully"
+);
