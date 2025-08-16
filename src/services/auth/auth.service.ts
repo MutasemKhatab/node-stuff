@@ -9,6 +9,13 @@ import {
   RegisterResponse,
 } from "./auth.types.ts";
 
+/**
+ * @function login
+ * Authenticates a user and generates a JWT token.
+ * @param {LoginRequest} loginRequest - The login credentials.
+ * @returns {Promise<LoginResponse>} A promise that resolves to the login response containing the token.
+ * @throws {ApiError} If the credentials are invalid.
+ */
 export const login = async ({
   email,
   password,
@@ -21,6 +28,13 @@ export const login = async ({
   return { token };
 };
 
+/**
+ * @function register
+ * Registers a new user and returns the user ID.
+ * @param {RegisterRequest} registerRequest - The registration details.
+ * @returns {Promise<RegisterResponse>} A promise that resolves to the registration response containing the user ID.
+ * @throws {ApiError} If the user already exists.
+ */
 export const register = async (
   registerRequest: RegisterRequest
 ): Promise<RegisterResponse> => {

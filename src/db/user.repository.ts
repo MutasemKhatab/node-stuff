@@ -6,6 +6,12 @@ import {
 } from "../services/auth/auth.types.ts";
 import dbconn from "./db.ts";
 
+/**
+ * @function create
+ * Inserts a new user into the database.
+ * @param {RegisterModel} user - The user data to insert.
+ * @returns id != 0 if the user was created successfully, otherwise id = 0.
+ */
 export async function create({
   email,
   password,
@@ -22,6 +28,13 @@ export async function create({
   }
 }
 
+/**
+ * @function findByEmail
+ * Retrieves a user by their email address.
+ * @param {string} email - The email address to search for.
+ * @returns {Promise<UserModel | null>} A promise that resolves to the user data or null if not found.
+ * @throws {ApiError} If there is a database error while finding the user.
+ */
 export async function findByEmail(email: string): Promise<UserModel | null> {
   try {
     const db = await dbconn(); // Get fresh connection

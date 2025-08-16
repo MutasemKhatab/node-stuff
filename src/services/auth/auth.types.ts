@@ -13,11 +13,6 @@ export interface RegisterModel {
   password: string;
 }
 
-export interface LoginModel {
-  email: string;
-  password: string;
-}
-
 export interface UserModel {
   id: number;
   email: string;

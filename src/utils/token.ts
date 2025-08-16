@@ -1,4 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { ApiError } from "../common/api-error";
 import { env } from "../config/env";
 
 const SECRET = env.JWT_SECRET;
@@ -16,8 +17,7 @@ export const verifyToken = (token: string): boolean => {
     jwt.verify(token, SECRET);
     return true;
   } catch (error) {
-    console.error("Token verification failed:", error);
-    return false;
+    throw new ApiError("Invalid token", 401, error);
   }
 };
 

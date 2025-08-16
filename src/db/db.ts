@@ -1,5 +1,10 @@
 import { AsyncDatabase } from "promised-sqlite3";
 
+/**
+ * @function getconn
+ * Opens a connection to the SQLite database and ensures the users table exists.
+ * @returns {Promise<AsyncDatabase>} A promise that resolves to the database connection.
+ */
 export default async function getconn() {
   const db = await AsyncDatabase.open("mydb.sqlite");
 
