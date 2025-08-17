@@ -17,10 +17,10 @@ export const responseHandler =
     try {
       const result = await handler(req, res, next);
 
-      if (res.headersSent) return; // If headers are already sent, do not send another response
+      if (res.headersSent) return;
       res.json(successResponse(result, successMessage, res.statusCode || OK));
     } catch (err: ApiError | any) {
-      if (res.headersSent) return; // If headers are already sent, do not send another response{
+      if (res.headersSent) return;
       res
         .status(err.statusCode || INTERNALSERVERERROR)
         .json(

@@ -1,14 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodType } from "zod";
 import { BADREQUEST, UNAUTHORIZED } from "../../constants/http-status-codes";
-import { decodeToken } from "../../utils/token";
 import { ApiError } from "../../utils/api-error";
+import { errorResponse } from "../../utils/response.type";
+import { decodeToken } from "../../utils/token";
 
 export const validateSchema = (schema: ZodType<any>) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.body);
     if (!result.success) {
-      throw new ApiError("Validation error", BADREQUEST, result.error);
+      res.status(BADREQUEST);
+      res.json(
+        errorResponse("Validation error", result.error.issues, BADREQUEST)
+      );
+      return;
     }
     req.body = result.data;
     next();

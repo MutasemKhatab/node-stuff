@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ApiError } from "../../../src/common/api-error";
 import { verifyToken } from "../../../src/services/middleware/auth.middleware";
+import { ApiError } from "../../../src/utils/api-error";
 import * as tokenUtils from "../../../src/utils/token";
 
 describe("verifyToken middleware", () => {
