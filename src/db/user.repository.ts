@@ -1,9 +1,10 @@
-import { ApiError } from "../common/api-error.ts";
+import { INTERNALSERVERERROR } from "../constants/http-status-codes.ts";
 import {
   RegisterModel,
   RegisterResponse,
   UserModel,
 } from "../services/auth/auth.types.ts";
+import { ApiError } from "../utils/api-error.ts";
 import dbconn from "./db.ts";
 
 /**
@@ -44,7 +45,11 @@ export async function findByEmail(email: string): Promise<UserModel | null> {
     );
     return row ?? null;
   } catch (err) {
-    throw new ApiError("Database error while finding user by email", 500, err);
+    throw new ApiError(
+      "Database error while finding user by email",
+      INTERNALSERVERERROR,
+      err
+    );
   }
 }
 
@@ -59,6 +64,10 @@ export async function updatePassword(
       email,
     ]);
   } catch (err) {
-    throw new ApiError("Database error while updating password", 500, err);
+    throw new ApiError(
+      "Database error while updating password",
+      INTERNALSERVERERROR,
+      err
+    );
   }
 }

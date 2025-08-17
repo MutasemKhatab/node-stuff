@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
-import { ApiError } from "../../common/api-error.ts";
+import { NOTFOUND, UNAUTHORIZED } from "../../constants/http-status-codes.ts";
 import {
   create,
   findByEmail,
   updatePassword,
 } from "../../db/user.repository.ts";
+import { ApiError } from "../../utils/api-error.ts";
 import { generateToken } from "../../utils/token.ts";
 import {
   ChangePasswordRequest,
@@ -26,9 +27,9 @@ export const login = async ({
   password,
 }: LoginRequest): Promise<LoginResponse> => {
   const user = await findByEmail(email);
-  if (!user) throw new ApiError("Invalid credentials", 401);
+  if (!user) throw new ApiError("Invalid credentials", UNAUTHORIZED);
   const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) throw new ApiError("Invalid credentials", 401);
+  if (!isPasswordValid) throw new ApiError("Invalid credentials", UNAUTHORIZED);
   const token = generateToken(user.email);
   return { token };
 };
@@ -53,13 +54,14 @@ export const changePassword = async (
   email: string
 ): Promise<void> => {
   const user = await findByEmail(email);
-  if (!user) throw new ApiError("User not found", 404);
+  if (!user) throw new ApiError("User not found", NOTFOUND);
 
   const isOldPasswordValid = await bcrypt.compare(
     changePasswordRequest.oldPassword,
     user.password
   );
-  if (!isOldPasswordValid) throw new ApiError("Old password is incorrect", 401);
+  if (!isOldPasswordValid)
+    throw new ApiError("Old password is incorrect", UNAUTHORIZED);
 
   const hasedNewPassword = await bcrypt.hash(
     changePasswordRequest.newPassword,

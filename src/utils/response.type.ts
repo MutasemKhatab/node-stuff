@@ -1,3 +1,5 @@
+import { INTERNALSERVERERROR, OK } from "../constants/http-status-codes";
+
 /**
  * @interface ApiResponse<T>
  * Represents a standardized API response structure.
@@ -25,7 +27,7 @@ export interface ApiResponse<T> {
 export const successResponse = <T>(
   data: T,
   message = "Success",
-  statusCode: number = 200
+  statusCode: number = OK
 ): ApiResponse<T> => {
   return {
     success: true,
@@ -45,7 +47,7 @@ export const successResponse = <T>(
 export const errorResponse = (
   message = "Error",
   errors: any = null,
-  statusCode: number = 500
+  statusCode: number = INTERNALSERVERERROR
 ): ApiResponse<null> => {
   return {
     success: false,

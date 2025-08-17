@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { INTERNALSERVERERROR, OK } from "../constants/http-status-codes";
 import { ApiError } from "./api-error";
 import { errorResponse, successResponse } from "./response.type";
 /**
@@ -17,16 +18,16 @@ export const responseHandler =
       const result = await handler(req, res, next);
 
       if (res.headersSent) return; // If headers are already sent, do not send another response
-      res.json(successResponse(result, successMessage, res.statusCode || 200));
+      res.json(successResponse(result, successMessage, res.statusCode || OK));
     } catch (err: ApiError | any) {
       if (res.headersSent) return; // If headers are already sent, do not send another response{
       res
-        .status(err.statusCode || 500)
+        .status(err.statusCode || INTERNALSERVERERROR)
         .json(
           errorResponse(
             err.message || "Internal Server Error",
             err.errorDetails || null,
-            err.statusCode || 500
+            err.statusCode || INTERNALSERVERERROR
           )
         );
     }

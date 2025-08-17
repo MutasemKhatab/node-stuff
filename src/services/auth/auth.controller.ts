@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
-import { ApiError } from "../../common/api-error.ts";
-import { responseHandler } from "../../common/response-handler.ts";
+import {
+  BADREQUEST,
+  CONFLICT,
+  CREATED,
+  NO_CONTENT,
+} from "../../constants/http-status-codes.ts";
+import { ApiError } from "../../utils/api-error.ts";
+import { responseHandler } from "../../utils/response-handler.ts";
 import { getEmailFromRequest } from "../../utils/token.ts";
 import * as authService from "./auth.service.ts";
 import {
@@ -21,10 +27,10 @@ export const register = responseHandler(async (req: Request, res: Response) => {
   if (result.id === 0) {
     throw new ApiError(
       `User with email ${registerRequest.email} already exists`,
-      409
+      CONFLICT
     );
   }
-  res.status(201);
+  res.status(CREATED);
   return result;
 }, "User registered successfully");
 
@@ -36,10 +42,13 @@ export const changePassword = responseHandler(
       !changePasswordRequest.oldPassword ||
       !changePasswordRequest.newPassword
     ) {
-      throw new ApiError("Old password and new password are required", 400);
+      throw new ApiError(
+        "Old password and new password are required",
+        BADREQUEST
+      );
     }
     await authService.changePassword(changePasswordRequest, email);
-    res.status(204);
+    res.status(NO_CONTENT);
     return;
   },
   "Password changed successfully"
